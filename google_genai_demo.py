@@ -16,9 +16,11 @@ if not api_key:
 loader = TextLoader("docs/urban_oasis.txt")
 documents = loader.load()
 
-embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/embedding-001", google_api_key=api_key
-)
+api_key = os.getenv("GOOGLE_API_KEY")
+
+embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+vector = embeddings.embed_query("hello, world!")
+vector[:5]
 
 if documents:
     first_document = documents[0]
