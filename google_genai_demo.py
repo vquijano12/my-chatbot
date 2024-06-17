@@ -7,7 +7,7 @@ from langchain_community.document_loaders import TextLoader
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 load_dotenv()
-api_key = os.getenv("GOOGLE_GENAI_API_KEY")
+api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
     raise ValueError(
         "API key not found. Please set GOOGLE_GENAI_API_KEY in the .env file."
