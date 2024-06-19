@@ -25,21 +25,15 @@ embedding_function = HuggingFaceEmbeddings(
 conn = sqlite3.connect("documents_embeddings.db")
 c = conn.cursor()
 
-# Create table to store documents and their embeddings
+# Create table to store documents and their embeddings as TEXT
 c.execute(
     """CREATE TABLE IF NOT EXISTS documents
-             (id INTEGER PRIMARY KEY, document TEXT, embedding BLOB)"""
+             (id INTEGER PRIMARY KEY, document TEXT, embedding TEXT)"""
 )
 
-# Function to convert numpy array to binary for SQLite
-def adapt_array(arr):
-    out = io.BytesIO()
-    np.save(out, arr)
-    out.seek(0)
-    return sqlite3.Binary(out.read())
-
-# Register the conversion function
-sqlite3.register_adapter(np.ndarray, adapt_array)
+# Function to convert numpy array to a comma-separated string
+def array_to_string(arr):
+    return ','.join(map(str, arr))
 
 # Insert documents and their embeddings into the database
 for doc in docs:
@@ -47,10 +41,12 @@ for doc in docs:
     embedding = embedding_function.embed_documents([doc_text])[0]
     # Ensure embedding is a numpy array
     embedding_array = np.array(embedding)
+    # Convert numpy array to a comma-separated string
+    embedding_string = array_to_string(embedding_array)
     # Insert document chunk and embedding into the database
     c.execute(
         "INSERT INTO documents (document, embedding) VALUES (?, ?)",
-        (doc_text, adapt_array(embedding_array)),
+        (doc_text, embedding_string),
     )
 
 # Commit the changes and close the connection
