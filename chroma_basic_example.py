@@ -2,7 +2,6 @@
 import io
 import numpy as np
 import sqlite3
-from langchain_chroma import Chroma
 from langchain_community.document_loaders import TextLoader
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -20,9 +19,6 @@ embedding_function = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
-# load it into Chroma
-db = Chroma.from_documents(docs, embedding_function)
-
 # Database-related code starts here
 
 # Connect to SQLite database (this will create the database if it doesn't exist)
@@ -35,7 +31,6 @@ c.execute(
              (id INTEGER PRIMARY KEY, document TEXT, embedding BLOB)"""
 )
 
-
 # Function to convert numpy array to binary for SQLite
 def adapt_array(arr):
     out = io.BytesIO()
@@ -43,12 +38,10 @@ def adapt_array(arr):
     out.seek(0)
     return sqlite3.Binary(out.read())
 
-
 # Register the conversion function
 sqlite3.register_adapter(np.ndarray, adapt_array)
 
 # Insert documents and their embeddings into the database
-# Assuming each 'doc' in 'docs' has a '.text' attribute containing the document's text
 for doc in docs:
     doc_text = doc.page_content
     embedding = embedding_function.embed_documents([doc_text])[0]
@@ -64,11 +57,6 @@ for doc in docs:
 conn.commit()
 conn.close()
 
-# Now you can continue with your script to perform queries, etc.
-
-# query it
-query = "What did the president say about Ketanji Brown Jackson"
-docs = db.similarity_search(query)
-
-# print results
-print(docs[0].page_content)
+# To perform queries, you would need to implement a function that converts
+# embeddings back from binary and computes similarity with the query embedding.
+# This part is not included in the snippet above.
