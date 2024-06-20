@@ -20,7 +20,7 @@ embedding_function = HuggingFaceEmbeddings(
 )
 
 # Connect to the database
-conn = sqlite3.connect("documents_embeddings.db")
+conn = sqlite3.connect("huggingface_embeddings.db")
 c = conn.cursor()
 
 # Create the table where the documents and embeddings will be stored
