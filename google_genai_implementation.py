@@ -41,7 +41,7 @@ c.execute(
              (id INTEGER PRIMARY KEY, document TEXT, embedding TEXT)"""
 )
 
-for doc, embedding in zip(documents, embeddings):
+for doc, embedding in zip(docs, embeddings):
     # Convert the embedding to a JSON string
     embedding_json = json.dumps(embedding)
     # Insert the document and its embedding into the database
