@@ -56,7 +56,7 @@ conn.close()
 
 if documents:
     # Retrieves the first document from the documents list and stores it in first_document
-    first_document = documents[0]
+    first_document = docs[0]
     print("Content:", first_document.page_content)
     print("Metadata:", first_document.metadata)
 else:
