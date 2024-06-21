@@ -20,4 +20,9 @@ def load_and_process_documents(filepath):
     # Create embeddings for the documents
     embeddings = [embeddings.embed_query(doc.page_content) for doc in docs]
 
+    if embeddings:
+        print("Embeddings were successfully created.")
+    else:
+        print("Failed to create embeddings.")
+
     return docs, embeddings
