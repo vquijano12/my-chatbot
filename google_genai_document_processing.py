@@ -11,7 +11,7 @@ def load_and_process_documents(filepath):
     documents = loader.load()
 
     # Split the text into chunks
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=50, chunk_overlap=10)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=75, chunk_overlap=30)
     docs = text_splitter.split_documents(documents)
 
     # Create instance of the GoogleGenerativeAIEmbeddings class
