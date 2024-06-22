@@ -10,7 +10,7 @@ from google_genai_database import (
 def main():
     api_key = get_api_key()
 
-    docs, embeddings = load_and_process_documents("docs/urban_oasis.txt")
+    docs, embeddings = load_and_process_documents("docs/urban_sustainability.txt")
 
     conn = connect_db()
     create_documents_table(conn)
