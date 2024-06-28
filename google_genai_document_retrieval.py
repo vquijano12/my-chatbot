@@ -46,14 +46,32 @@ def calculate_similarity(query_embedding, doc_embeddings):
 
 
 def get_most_relevant_documents(query, api_key, top_n=5):
-    # Generate the embedding for the query
-    query_embedding = get_query_embedding(query, api_key)
-    # Retrieve the document embeddings from the database
-    doc_embeddings = fetch_document_embeddings()
-    # Calculate the similarity between the query and document embeddings
-    doc_info = calculate_similarity(query_embedding, doc_embeddings)
-    # Sort the documents by similarity score in descending order and select the top N documents
-    sorted_doc_info = sorted(doc_info, key=lambda x: x[1], reverse=True)[:top_n]
+    sorted_doc_info = []  # Initialize to ensure a list is always returned
+
+    try:
+        # Generate the embedding for the query
+        query_embedding = get_query_embedding(query, api_key)
+        if query_embedding is None:
+            return sorted_doc_info  # Return empty list if query embedding fails
+
+        # Retrieve the document embeddings from the database
+        doc_embeddings = fetch_document_embeddings()
+        if not doc_embeddings:
+            return sorted_doc_info  # Return empty list if no document embeddings
+
+        # Calculate the similarity between the query and document embeddings
+        doc_info = calculate_similarity(query_embedding, doc_embeddings)
+        if not doc_info:
+            return sorted_doc_info  # Return empty list if similarity calculation fails
+
+        # Sort the documents by similarity score in descending order and select the top N documents
+        sorted_doc_info = sorted(doc_info, key=lambda x: x[1], reverse=True)[:top_n]
+
+    except Exception as e:
+        print(f"Error in document retrieval: {e}")
+        # Return an empty list in case of any error
+        return sorted_doc_info
+
     return sorted_doc_info
 
 
