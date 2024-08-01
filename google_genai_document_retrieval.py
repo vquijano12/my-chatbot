@@ -30,57 +30,53 @@ def fetch_document_embeddings():
     return embeddings
 
 
+# Define the relevance threshold as a constant
+RELEVANCE_THRESHOLD = 0.7
+
+
 def calculate_similarity(query_embedding, doc_embeddings):
-    # Convert the query embedding to a numpy array
     query_emb_array = np.array(query_embedding).reshape(1, -1)
-    doc_info = []  # List to store document ID, similarity score, and document text
+    doc_info = []
+
     # Iterate over the document embeddings
     for doc_id, (doc_embedding, doc_text) in doc_embeddings.items():
         # Convert the document embedding to a numpy array
         doc_emb_array = np.array(doc_embedding).reshape(1, -1)
         # Calculate the cosine similarity between the query and document embeddings
         similarity = cosine_similarity(query_emb_array, doc_emb_array)[0][0]
-        # Append the document ID, similarity score, and document text to the list
-        doc_info.append((doc_id, similarity, doc_text))
+        # Check if the similarity is above the relevance threshold
+        if similarity >= RELEVANCE_THRESHOLD:
+            # Append the document ID, similarity score, and document text to the list
+            doc_info.append((doc_id, similarity, doc_text))
     return doc_info
 
 
 def get_most_relevant_documents(query, api_key, top_n=5):
-    sorted_doc_info = []  # Initialize to ensure a list is always returned
+    # Generate the embedding for the query
+    query_embedding = get_query_embedding(query, api_key)
 
-    try:
-        # Generate the embedding for the query
-        query_embedding = get_query_embedding(query, api_key)
-        if query_embedding is None:
-            return sorted_doc_info  # Return empty list if query embedding fails
+    # Retrieve the document embeddings from the database
+    doc_embeddings = fetch_document_embeddings()
 
-        # Retrieve the document embeddings from the database
-        doc_embeddings = fetch_document_embeddings()
-        if not doc_embeddings:
-            return sorted_doc_info  # Return empty list if no document embeddings
+    # Calculate the similarity between the query and document embeddings
+    doc_info = calculate_similarity(query_embedding, doc_embeddings)
 
-        # Calculate the similarity between the query and document embeddings
-        doc_info = calculate_similarity(query_embedding, doc_embeddings)
-        if not doc_info:
-            return sorted_doc_info  # Return empty list if similarity calculation fails
+    # Sort the documents by similarity score in descending order and select the top N documents
+    sorted_doc_info = sorted(doc_info, key=lambda x: x[1], reverse=True)[:top_n]
 
-        # Sort the documents by similarity score in descending order and select the top N documents
-        sorted_doc_info = sorted(doc_info, key=lambda x: x[1], reverse=True)[:top_n]
-
-    except Exception as e:
-        print(f"Error in document retrieval: {e}")
-        # Return an empty list in case of any error
-        return sorted_doc_info
+    # Check if any documents meet the relevance threshold
+    if not sorted_doc_info:
+        return "Sorry, I cannot help with that."
 
     return sorted_doc_info
 
 
-if __name__ == "__main__":
-    api_key = get_api_key()
+# if __name__ == "__main__":
+#     api_key = get_api_key()
 
-    query = "Tell me about urban sustainability."
-    top_documents_info = get_most_relevant_documents(query, api_key)
-    for doc_id, similarity, doc_text in top_documents_info:
-        print(f"Document ID: {doc_id}, Similarity: {similarity}")
-        print(f"Document Text: {doc_text}\n")
-        # print(f"Embedding: {embedding}\n")
+#     query = "Tell me about urban sustainability."
+#     top_documents_info = get_most_relevant_documents(query, api_key)
+#     for doc_id, similarity, doc_text in top_documents_info:
+#         print(f"Document ID: {doc_id}, Similarity: {similarity}")
+#         print(f"Document Text: {doc_text}\n")
+#         # print(f"Embedding: {embedding}\n")
