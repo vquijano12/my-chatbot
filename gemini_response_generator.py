@@ -6,7 +6,7 @@ from google_genai_document_retrieval import (
     get_most_relevant_documents,
 )
 
-prompt = ""
+prompt = "Provide a brief explanation of the topic in one sentence."
 
 if __name__ == "__main__":
     api_key = get_api_key()
@@ -27,12 +27,15 @@ if __name__ == "__main__":
 
         top_documents_info = get_most_relevant_documents(query, api_key, top_n=5)
 
-        context = " ".join([doc_text for _, _, doc_text in top_documents_info])
+        if isinstance(top_documents_info, str):
+            print(top_documents_info)
+        else:
+            context = " ".join([doc_text for _, _, doc_text in top_documents_info])
 
-        # Append the one-sentence instruction to the context
-        context_with_instruction = context + prompt
+            # Append the instruction to the context
+            context_with_instruction = context + prompt
 
-        # Use the modified context to generate a response
-        response = llm.invoke(context_with_instruction)
+            # Use the modified context to generate a response
+            response = llm.invoke(context_with_instruction)
 
-        print("Generated Response:", response.content)
+            print("Generated Response:", response.content)
