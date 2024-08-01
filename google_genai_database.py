@@ -19,14 +19,23 @@ def create_documents_table(conn):
     conn.commit()
 
 
+# Define a function to check if a document already exists in the database
+def document_exists(conn, document_content):
+    c = conn.cursor()
+    c.execute("SELECT 1 FROM documents WHERE document = ?", (document_content,))
+    return c.fetchone() is not None
+
+
+# Define a function to insert documents into the database if they don't already exist
 def insert_documents_with_embeddings(conn, docs, embeddings):
     c = conn.cursor()
     for doc, embedding in zip(docs, embeddings):
-        # Convert the embedding to a JSON string
-        embedding_json = json.dumps(embedding)
-        # Insert the document and its embedding into the database
-        c.execute(
-            "INSERT INTO documents (document, embedding) VALUES (?, ?)",
-            (doc.page_content, embedding_json),
-        )
+        if not document_exists(conn, doc.page_content):
+            # Convert the embedding to a JSON string
+            embedding_json = json.dumps(embedding)
+            # Insert the document and its embedding into the database
+            c.execute(
+                "INSERT INTO documents (document, embedding) VALUES (?, ?)",
+                (doc.page_content, embedding_json),
+            )
     conn.commit()
