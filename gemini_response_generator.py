@@ -6,11 +6,13 @@ from google_genai_document_retrieval import (
     get_most_relevant_documents,
 )
 
-prompt = "Provide a brief explanation of the topic in one sentence."
+prompt = "Provide a brief explanation of the topic in a small paragraph."
 
 if __name__ == "__main__":
     api_key = get_api_key()
     llm = ChatGoogleGenerativeAI(model="gemini-pro")
+
+    previous_responses = []  # Initialize a list to store previous responses
 
     while True:  # Start an infinite loop
         # Prompt the user for a query
@@ -32,10 +34,17 @@ if __name__ == "__main__":
         else:
             context = " ".join([doc_text for _, _, doc_text in top_documents_info])
 
-            # Append the instruction to the context
-            context_with_instruction = context + prompt
+            # Combine previous responses with the current context
+            combined_context = " ".join(previous_responses) + " " + context + prompt
 
-            # Use the modified context to generate a response
-            response = llm.invoke(context_with_instruction)
+            # Use the combined context to generate a response
+            response = llm.invoke(combined_context)
 
             print("Generated Response:", response.content)
+
+            # Store the generated response for future context
+            previous_responses.append(response.content)
+
+            # Optionally, limit the number of stored responses to avoid excessive context length
+            if len(previous_responses) > 5:
+                previous_responses.pop(0)
