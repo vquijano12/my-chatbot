@@ -4,3 +4,4 @@
 __pycache__/
 *.py[cod]
 lambda_package/
+lambda_package.zip
