@@ -6,5 +6,3 @@ __pycache__/
 lambda_package/
 lambda_package.zip
 requirements_copy.txt
-lambda_layer/
-lambda_layer.zip
