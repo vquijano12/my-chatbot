@@ -8,44 +8,43 @@ from google_genai_document_retrieval import (
 
 prompt = "Provide a brief explanation of the topic in a small paragraph."
 
-api_key = get_api_key()
-llm = ChatGoogleGenerativeAI(model="gemini-pro")
-
-previous_responses = []
-
-
-def generate_response(query):
-    query_embedding = get_query_embedding(query, api_key)
-    doc_embeddings = fetch_document_embeddings()
-    top_documents_info = get_most_relevant_documents(query, api_key, top_n=5)
-
-    if isinstance(top_documents_info, str):
-        return top_documents_info
-    else:
-        context = " ".join([doc_text for _, _, doc_text in top_documents_info])
-        combined_context = " ".join(previous_responses) + " " + context + prompt
-
-        response = llm.invoke(combined_context)
-
-        previous_responses.append(response.content)
-
-        if len(previous_responses) > 5:
-            previous_responses.pop(0)
-
-        return response.content
-
-
-def lambda_handler(event, context):
-    query = event.get("query", "default query")
-    response = generate_response(query)
-    return {"statusCode": 200, "body": response}
-
-
 if __name__ == "__main__":
-    while True:
+    api_key = get_api_key()
+    llm = ChatGoogleGenerativeAI(model="gemini-pro")
+
+    previous_responses = []  # Initialize a list to store previous responses
+
+    while True:  # Start an infinite loop
+        # Prompt the user for a query
         query = input("Enter your query (or type 'exit' to quit): ")
+
+        # Check if the user wants to exit
         if query.lower() == "exit":
             print("Exiting...")
-            break
-        response = generate_response(query)
-        print("Response:", response)
+            break  # Exit the loop
+
+        query_embedding = get_query_embedding(query, api_key)
+
+        doc_embeddings = fetch_document_embeddings()
+
+        top_documents_info = get_most_relevant_documents(query, api_key, top_n=5)
+
+        if isinstance(top_documents_info, str):
+            print(top_documents_info)
+        else:
+            context = " ".join([doc_text for _, _, doc_text in top_documents_info])
+
+            # Combine previous responses with the current context
+            combined_context = " ".join(previous_responses) + " " + context + prompt
+
+            # Use the combined context to generate a response
+            response = llm.invoke(combined_context)
+
+            print("Generated Response:", response.content)
+
+            # Store the generated response for future context
+            previous_responses.append(response.content)
+
+            # Optionally, limit the number of stored responses to avoid excessive context length
+            if len(previous_responses) > 5:
+                previous_responses.pop(0)
