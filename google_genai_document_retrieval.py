@@ -19,15 +19,32 @@ def get_query_embedding(query, api_key):
 
 
 def fetch_document_embeddings():
-    # Connect to the database
-    conn = sqlite3.connect(
+    # Get the absolute path to the database file
+    db_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "genai_embeddings.db")
     )
+
+    # Debugging: Print the path to the database file
+    print(f"Connecting to database at: {db_path}")
+
+    # Connect to the database
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
+
+    # Debugging: Check if the table exists
+    c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='documents'")
+    table_exists = c.fetchone()
+    if not table_exists:
+        print("Table 'documents' does not exist in the database.")
+        conn.close()
+        return {}
+
     # Retrieve all document IDs, their embeddings, and the actual document content from the database
     c.execute("SELECT id, embedding, document FROM documents")
+
     # Convert the fetched data into a dictionary: each document's ID is mapped to its embedding and content
     embeddings = {row[0]: (json.loads(row[1]), row[2]) for row in c.fetchall()}
+
     conn.close()
     return embeddings
 
