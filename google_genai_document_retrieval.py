@@ -20,7 +20,9 @@ def get_query_embedding(query, api_key):
 
 def fetch_document_embeddings():
     # Connect to the database
-    conn = sqlite3.connect("genai_embeddings.db")
+    conn = sqlite3.connect(
+        os.path.join(os.path.dirname(__file__), "..", "genai_embeddings.db")
+    )
     c = conn.cursor()
     # Retrieve all document IDs, their embeddings, and the actual document content from the database
     c.execute("SELECT id, embedding, document FROM documents")
