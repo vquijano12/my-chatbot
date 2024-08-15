@@ -21,7 +21,7 @@ def get_query_embedding(query, api_key):
 def fetch_document_embeddings():
     # Get the absolute path to the database file
     db_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "genai_embeddings.db")
+        os.path.join(os.path.dirname(__file__), "genai_embeddings.db")
     )
 
     # Debugging: Print the path to the database file
