@@ -18,13 +18,16 @@ def index():
 
 @app.route("/generate", methods=["POST"])
 def generate():
-    data = request.json
-    query = data.get("query")
-    if not query:
-        return jsonify({"error": "No query provided"}), 400
+    try:
+        data = request.get_json()
+        if not data or "input" not in data:
+            return jsonify({"error": "Invalid input"}), 400
 
-    response = generate_response(query)
-    return jsonify({"response": response})
+        input_text = data["input"]
+        response = generate_response(input_text)
+        return jsonify({"response": response}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
