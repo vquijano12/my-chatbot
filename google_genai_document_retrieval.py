@@ -52,23 +52,34 @@ def calculate_similarity(query_embedding, doc_embeddings):
 
 
 def get_most_relevant_documents(query, api_key, top_n=5):
-    # Generate the embedding for the query
-    query_embedding = get_query_embedding(query, api_key)
+    try:
+        # Generate the embedding for the query
+        print(f"Generating embedding for query: {query}")
+        query_embedding = get_query_embedding(query, api_key)
+        print(f"Query embedding length: {len(query_embedding)}")
 
-    # Retrieve the document embeddings from the database
-    doc_embeddings = fetch_document_embeddings()
+        # Retrieve the document embeddings from the database
+        print("Fetching document embeddings from the database")
+        doc_embeddings = fetch_document_embeddings()
+        print(f"Number of document embeddings: {len(doc_embeddings)}")
 
-    # Calculate the similarity between the query and document embeddings
-    doc_info = calculate_similarity(query_embedding, doc_embeddings)
+        # Calculate the similarity between the query and document embeddings
+        print("Calculating similarity between query and document embeddings")
+        doc_info = calculate_similarity(query_embedding, doc_embeddings)
+        print(f"Number of relevant documents: {len(doc_info)}")
 
-    # Sort the documents by similarity score in descending order and select the top N documents
-    sorted_doc_info = sorted(doc_info, key=lambda x: x[1], reverse=True)[:top_n]
+        # Sort the documents by similarity score in descending order and select the top N documents
+        sorted_doc_info = sorted(doc_info, key=lambda x: x[1], reverse=True)[:top_n]
+        print(f"Sorted document info: {sorted_doc_info}")
 
-    # Check if any documents meet the relevance threshold
-    if not sorted_doc_info:
+        # Check if any documents meet the relevance threshold
+        if not sorted_doc_info:
+            return "Sorry, I cannot help with that. Your query does not match any relevant documents in our database."
+
+        return sorted_doc_info
+    except Exception as e:
+        print(f"Error in get_most_relevant_documents: {e}")
         return "Sorry, I cannot help with that."
-
-    return sorted_doc_info
 
 
 # if __name__ == "__main__":
