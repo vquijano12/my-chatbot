@@ -3,10 +3,8 @@ import os
 import json
 import sqlite3
 import numpy as np
-from dotenv import load_dotenv
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
-from google_genai_config import get_api_key
 
 
 def get_query_embedding(query, api_key):
@@ -99,14 +97,3 @@ def get_most_relevant_documents(query, api_key, top_n=5):
     except Exception as e:
         print(f"Error in get_most_relevant_documents: {e}")
         return "Sorry, I cannot help with that."
-
-
-# if __name__ == "__main__":
-#     api_key = get_api_key()
-
-#     query = "Tell me about urban sustainability."
-#     top_documents_info = get_most_relevant_documents(query, api_key)
-#     for doc_id, similarity, doc_text in top_documents_info:
-#         print(f"Document ID: {doc_id}, Similarity: {similarity}")
-#         print(f"Document Text: {doc_text}\n")
-#         # print(f"Embedding: {embedding}\n")
