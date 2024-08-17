@@ -1,5 +1,4 @@
 import os
-from google_genai_config import get_api_key
 from google_genai_document_processing import load_and_process_documents
 from google_genai_database import (
     connect_db,
@@ -9,7 +8,6 @@ from google_genai_database import (
 
 
 def main():
-    api_key = get_api_key()
 
     filepaths = [
         "docs/urban_sustainability.txt",
