@@ -14,8 +14,6 @@ previous_responses = []
 
 
 def generate_response(query):
-    query_embedding = get_query_embedding(query, api_key)
-    doc_embeddings = fetch_document_embeddings()
     top_documents_info = get_most_relevant_documents(query, api_key, top_n=5)
 
     if isinstance(top_documents_info, str):
