@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from gemini_response_generator import generate_response
+from rag_modules.gemini_response_generator import generate_response
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes

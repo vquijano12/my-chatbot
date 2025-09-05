@@ -17,10 +17,9 @@ def get_query_embedding(query, api_key):
 
 
 def fetch_document_embeddings():
-    # Get the absolute path to the database file
-    db_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "vector-store/genai_embeddings.db")
-    )
+    # Get the absolute path to the database file (relative to backend root)
+    backend_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    db_path = os.path.join(backend_root, "vector-store", "genai_embeddings.db")
 
     # Debugging: Print the path to the database file
     print(f"Connecting to database at: {db_path}")

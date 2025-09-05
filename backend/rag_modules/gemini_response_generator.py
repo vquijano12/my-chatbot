@@ -1,6 +1,6 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-from google_genai_config import get_api_key
-from google_genai_document_retrieval import (
+from .google_genai_config import get_api_key
+from .google_genai_document_retrieval import (
     get_most_relevant_documents,
 )
 

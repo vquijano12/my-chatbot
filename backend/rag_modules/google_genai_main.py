@@ -5,13 +5,12 @@ from google_genai_document_processing import load_and_process_documents
 
 def main():
     filepaths = []
+    # Load environment variables from .env at the root of backend
+    backend_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    load_dotenv(os.path.join(backend_root, ".env"))
 
-    # Load environment variables from .env in the same directory
-    load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
-
-    # Get the directory where the script is located
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    directory = os.path.join(script_dir, "raw_documents")
+    # Use backend_root to get the raw_documents directory (located at backend/raw_documents)
+    directory = os.path.join(backend_root, "raw_documents")
 
     # Iterate over files in the directory
     for filename in os.listdir(directory):
