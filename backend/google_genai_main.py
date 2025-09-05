@@ -1,11 +1,17 @@
 import os
+from dotenv import load_dotenv
 from google_genai_document_processing import load_and_process_documents
 
 
 def main():
     filepaths = []
 
-    directory = "docs"
+    # Load environment variables from .env in the same directory
+    load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+
+    # Get the directory where the script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    directory = os.path.join(script_dir, "raw_documents")
 
     # Iterate over files in the directory
     for filename in os.listdir(directory):
