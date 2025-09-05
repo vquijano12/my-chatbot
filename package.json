@@ -1,0 +1,9 @@
+{
+  "name": "my-chatbot",
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "python -m venv .venv && .\\venv\\Scripts\\activate && pip install -r requirements.txt && cd frontend && npm install && cd ..",
+    "frontend": "npm --prefix frontend start",
+    "backend": "python ./backend/main.py"
+  }
+}

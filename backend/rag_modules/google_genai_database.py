@@ -4,8 +4,16 @@ import json
 
 
 # Define a function to connect to the database
-def connect_db(db_name="genai_embeddings.db"):
-    # Connect to the database
+import os
+
+
+def connect_db(db_name=None):
+    if db_name is None:
+        # Set the database path to the backend root directory
+        backend_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        db_name = os.path.join(backend_root, "vector-store", "genai_embeddings.db")
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(db_name), exist_ok=True)
     return sqlite3.connect(db_name)
 
 
