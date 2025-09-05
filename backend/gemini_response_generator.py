@@ -7,7 +7,7 @@ from google_genai_document_retrieval import (
 prompt = "Provide a brief explanation of the topic in a small paragraph."
 
 api_key = get_api_key()
-llm = ChatGoogleGenerativeAI(model="gemini-pro")
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro")
 previous_responses = []
 
 
