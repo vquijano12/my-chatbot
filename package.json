@@ -4,6 +4,8 @@
   "scripts": {
     "setup": "python -m venv .venv && .\\venv\\Scripts\\activate && pip install -r requirements.txt && cd frontend && npm install && cd ..",
     "frontend": "npm --prefix frontend start",
-    "backend": "python ./backend/main.py"
+    "backend": "python ./backend/main.py",
+    "ingest": "python -m backend.rag_modules.cli ingest",
+    "cli": "python -m backend.rag_modules.cli chat"
   }
 }
