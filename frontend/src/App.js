@@ -3,35 +3,53 @@ import { generateResponse } from "./api";
 
 const App = () => {
   const [input, setInput] = useState("");
-  const [response, setResponse] = useState("");
+  const [messages, setMessages] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!input.trim()) {
-      setResponse("Please enter a query.");
-      return;
-    }
+    if (!input.trim()) return;
+
+    setMessages((prev) => [...prev, { role: "user", content: input }]);
+
     try {
       const result = await generateResponse({ input });
-      setResponse(result.response); // Access the 'response' key from the result
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: result.response },
+      ]);
     } catch (error) {
-      console.error("Error:", error);
-      setResponse("An error occurred while generating the response.");
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "An error occurred whil generating the response.",
+        },
+      ]);
     }
+    setInput("");
   };
 
   return (
     <div>
-      <h1>React and Flask Integration</h1>
+      <h1>Q&AI Helper</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <button type="submit">Generate</button>
+        <button type="submit">Send</button>
       </form>
-      {response && <div>Response: {response}</div>}
+      <div>
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            style={{ textAlign: msg.role === "user" ? "right" : "left" }}
+          >
+            <b>{msg.role === "user" ? "You" : "Bot"}:</b> {msg.content}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
