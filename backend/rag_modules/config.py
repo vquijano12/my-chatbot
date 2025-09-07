@@ -8,6 +8,6 @@ def get_api_key():
     api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
         raise ValueError(
-            "API key not found. Please set GOOGLE_GENAI_API_KEY in the .env file."
+            "API key not found. Please set GOOGLE_API_KEY in the .env file."
         )
     return api_key
