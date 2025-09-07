@@ -10,6 +10,7 @@ const App = () => {
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, { role: "user", content: input }]);
+    setInput("");
 
     try {
       const result = await generateResponse({ input });
@@ -26,7 +27,6 @@ const App = () => {
         },
       ]);
     }
-    setInput("");
   };
 
   return (
