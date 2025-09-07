@@ -15,9 +15,12 @@ from rag_modules.embedding_model import embed_query
 from rag_modules.vector_store import connect_db, fetch_relevant_documents
 from rag_modules.prompt_template import get_prompt_template
 from rag_modules.chat_model import generate_response
+from rag_modules.conversation import ConversationManager
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+conv = ConversationManager()
 
 
 @app.route("/")
@@ -36,21 +39,29 @@ def generate():
         db_path = os.path.join(
             os.path.dirname(__file__), "vector-store", "vector_store.db"
         )
+        conv.add_user_message(input_text)
 
         # Modular RAG pipeline:
         conn = connect_db(db_path)
         query_embedding = embed_query(input_text)
         docs = fetch_relevant_documents(conn, query_embedding)
         context = "\n\n".join(doc["content"] for doc in docs)
-        prompt = get_prompt_template().format(context=context, question=input_text)
+        history = conv.build_prompt()
+        prompt = get_prompt_template().format(
+            context=context, question=input_text, history=history
+        )
         response = generate_response(prompt)
         conn.close()
 
         # Extract only the text if needed
         if hasattr(response, "content"):
-            response = response.content
+            conv.add_assistant_message(response.content)
+            response_text = response.content
+        else:
+            conv.add_assistant_message(response)
+            response_text = response
 
-        return jsonify({"response": response}), 200
+        return jsonify({"response": response_text}), 200
     except Exception as e:
         print("Error in /generate:", e)
         return jsonify({"error": str(e)}), 500
