@@ -6,3 +6,4 @@ __pycache__/
 lambda_package/
 lambda_package.zip
 requirements_copy.txt
+context.txt
