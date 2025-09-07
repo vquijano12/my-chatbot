@@ -1,6 +1,7 @@
 import os
 import argparse
 from dotenv import load_dotenv
+from .conversation import ConversationManager
 from .document_loader import load_documents
 from .text_splitter import split_documents
 from .embedding_model import embed_documents, embed_query
@@ -32,19 +33,26 @@ def ingest(directory, db_path):
 
 
 def generate(db_path):
+    from .conversation import ConversationManager
+
+    conv = ConversationManager()
     conn = connect_db(db_path)
     while True:
         query = input("You: ")
         if query.lower() in {"exit", "quit"}:
             break
+        conv.add_user_message(query)  # Add user's query to conversation history
         query_embedding = embed_query(query)
         docs = fetch_relevant_documents(conn, query_embedding)
         context = "\n\n".join(doc["content"] for doc in docs)
         prompt = get_prompt_template().format(context=context, question=query)
         answer = generate_response(prompt)
+        # Add assistant's response to conversation history
         if hasattr(answer, "content"):
+            conv.add_assistant_message(answer.content)
             print("Bot:", answer.content)
         else:
+            conv.add_assistant_message(answer)
             print("Bot:", answer)
     conn.close()
 
