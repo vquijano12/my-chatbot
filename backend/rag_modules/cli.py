@@ -33,7 +33,6 @@ def ingest(directory, db_path):
 
 
 def generate(db_path):
-    from .conversation import ConversationManager
 
     conv = ConversationManager()
     conn = connect_db(db_path)
@@ -45,7 +44,10 @@ def generate(db_path):
         query_embedding = embed_query(query)
         docs = fetch_relevant_documents(conn, query_embedding)
         context = "\n\n".join(doc["content"] for doc in docs)
-        prompt = get_prompt_template().format(context=context, question=query)
+        history = conv.build_prompt()
+        prompt = get_prompt_template().format(
+            context=context, question=query, history=history
+        )
         answer = generate_response(prompt)
         # Add assistant's response to conversation history
         if hasattr(answer, "content"):

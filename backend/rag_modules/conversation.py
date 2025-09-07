@@ -11,14 +11,12 @@ class ConversationManager:
     def get_history(self):
         return self.history
 
-    def build_prompt(self, context=None):
+    def build_prompt(self):
         prompt = ""
         for turn in self.history:
             if turn["role"] == "user":
                 prompt += f"User: {turn['content']}\n"
             else:
                 prompt += f"Assistant: {turn['content']}\n"
-        if context:
-            prompt += f"\nContext:\n{context}\n"
         prompt += "Assistant:"
         return prompt
