@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { generateResponse } from "./api";
+import "./App.css";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -23,7 +24,7 @@ const App = () => {
         ...prev,
         {
           role: "assistant",
-          content: "An error occurred whil generating the response.",
+          content: "An error occurred while generating the response.",
         },
       ]);
     }
@@ -44,9 +45,15 @@ const App = () => {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            style={{ textAlign: msg.role === "user" ? "right" : "left" }}
+            className={msg.role === "user" ? "user-row" : "assistant-row"}
           >
-            <b>{msg.role === "user" ? "You" : "Bot"}:</b> {msg.content}
+            <div
+              className={
+                msg.role === "user" ? "user-message" : "assistant-message"
+              }
+            >
+              <b>{msg.role === "user" ? "You" : "Bot"}:</b> {msg.content}
+            </div>
           </div>
         ))}
       </div>
