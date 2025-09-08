@@ -77,3 +77,28 @@ div > div {
   border-radius: 16px 16px 16px 4px;
   margin-right: 40px;
 }
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #007bff;
+  border-top: 3px solid #f5f5f5;
+  border-radius: 50%;
+  margin-right: 10px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

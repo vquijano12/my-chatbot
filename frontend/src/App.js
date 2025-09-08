@@ -5,6 +5,7 @@ import "./App.css";
 const App = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -12,6 +13,7 @@ const App = () => {
 
     setMessages((prev) => [...prev, { role: "user", content: input }]);
     setInput("");
+    setLoading(true);
 
     try {
       const result = await generateResponse({ input });
@@ -27,6 +29,8 @@ const App = () => {
           content: "An error occurred while generating the response.",
         },
       ]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,6 +45,11 @@ const App = () => {
         />
         <button type="submit">Send</button>
       </form>
+      {loading && (
+        <div className="loading-indicator">
+          <span className="spinner"></span> Generating response...
+        </div>
+      )}
       <div>
         {messages.map((msg, idx) => (
           <div
