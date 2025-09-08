@@ -46,6 +46,18 @@ div > div {
   margin: 10px 0;
 }
 
+.chat {
+  max-height: 400px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .user-row {
   display: flex;
   justify-content: flex-end;

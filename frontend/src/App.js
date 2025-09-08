@@ -50,7 +50,7 @@ const App = () => {
           <span className="spinner"></span> Generating response...
         </div>
       )}
-      <div>
+      <div className="chat">
         {messages.map((msg, idx) => (
           <div
             key={idx}
