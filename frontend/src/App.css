@@ -11,15 +11,21 @@ h1 {
 form {
   display: flex;
   justify-content: center;
+  align-items: flex-end; /* Align button to bottom of textarea */
   margin: 20px 0;
 }
 
-input[type="text"] {
+.chat-input {
   width: 60%;
-  padding: 10px;
+  min-height: 36px;
+  max-height: 120px;
   font-size: 1em;
   border-radius: 16px;
   border: 1px solid #ccc;
+  padding: 10px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  transition: height 0.2s;
 }
 
 button {
