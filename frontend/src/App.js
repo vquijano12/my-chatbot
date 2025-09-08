@@ -71,22 +71,24 @@ const App = () => {
           <span className="spinner"></span> Generating response...
         </div>
       )}
-      <div className="chat">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={msg.role === "user" ? "user-row" : "assistant-row"}
-          >
+      {messages.length > 0 && (
+        <div className="chat">
+          {messages.map((msg, idx) => (
             <div
-              className={
-                msg.role === "user" ? "user-message" : "assistant-message"
-              }
+              key={idx}
+              className={msg.role === "user" ? "user-row" : "assistant-row"}
             >
-              <b>{msg.role === "user" ? "You" : "Bot"}:</b> {msg.content}
+              <div
+                className={
+                  msg.role === "user" ? "user-message" : "assistant-message"
+                }
+              >
+                <b>{msg.role === "user" ? "You" : "Bot"}:</b> {msg.content}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
