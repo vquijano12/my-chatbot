@@ -1,12 +1,22 @@
 import React from "react";
 import MessageBubble from "./MessageBubble";
+import ScrollToBottom from "./ScrollToBottom";
 
-const ChatContainer = ({ messages, chatEndRef }) => (
-  <div className="chat">
+const ChatContainer = ({
+  messages,
+  chatEndRef,
+  chatContainerRef,
+  showScrollBtn,
+  scrollToBottom,
+}) => (
+  <div className="chat" ref={chatContainerRef}>
     {messages.map((msg, idx) => (
       <MessageBubble key={idx} role={msg.role} content={msg.content} />
     ))}
     <div ref={chatEndRef} />
+    <div className="scroll-to-bottom-wrapper">
+      <ScrollToBottom onClick={scrollToBottom} visible={showScrollBtn} />
+    </div>
   </div>
 );
 

@@ -11,6 +11,8 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const textareaRef = useRef(null);
   const chatEndRef = useRef(null);
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -30,6 +32,30 @@ const App = () => {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  useEffect(() => {
+    const chatContainer = chatContainerRef.current;
+    if (!chatContainer) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = chatContainer;
+      setShowScrollBtn(scrollTop + clientHeight < scrollHeight - 20);
+    };
+
+    chatContainer.addEventListener("scroll", handleScroll);
+
+    // Run once in case the chat is already scrollable
+    handleScroll();
+
+    // Clean up
+    return () => chatContainer.removeEventListener("scroll", handleScroll);
+  }, [messages]); // <-- add messages as a dependency
+
+  const scrollToBottom = () => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,7 +98,15 @@ const App = () => {
       />
       {loading && <LoadingIndicator />}
       {messages.length > 0 && (
-        <ChatContainer messages={messages} chatEndRef={chatEndRef} />
+        <div style={{ position: "relative" }}>
+          <ChatContainer
+            messages={messages}
+            chatEndRef={chatEndRef}
+            chatContainerRef={chatContainerRef}
+            scrollToBottom={scrollToBottom}
+            showScrollBtn={showScrollBtn}
+          />
+        </div>
       )}
     </div>
   );
