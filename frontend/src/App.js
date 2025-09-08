@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { generateResponse } from "./api";
 import "./App.css";
+import ChatInput from "./components/ChatInput";
+import ChatContainer from "./components/ChatContainer";
+import LoadingIndicator from "./components/LoadingIndicator";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -60,42 +63,16 @@ const App = () => {
   return (
     <div className="app-container">
       <h1>Q&AI Helper</h1>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          ref={textareaRef}
-          value={input}
-          onChange={handleInputChange}
-          rows={1}
-          className="chat-input"
-          style={{ resize: "none" }}
-        />
-        <button type="submit" disabled={loading}>
-          Send
-        </button>
-      </form>
-      {loading && (
-        <div className="loading-indicator">
-          <span className="spinner"></span> Generating response...
-        </div>
-      )}
+      <ChatInput
+        input={input}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+        textareaRef={textareaRef}
+        loading={loading}
+      />
+      {loading && <LoadingIndicator />}
       {messages.length > 0 && (
-        <div className="chat">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={msg.role === "user" ? "user-row" : "assistant-row"}
-            >
-              <div
-                className={
-                  msg.role === "user" ? "user-message" : "assistant-message"
-                }
-              >
-                <b>{msg.role === "user" ? "You" : "Bot"}:</b> {msg.content}
-              </div>
-            </div>
-          ))}
-          <div ref={chatEndRef} />
-        </div>
+        <ChatContainer messages={messages} chatEndRef={chatEndRef} />
       )}
     </div>
   );
