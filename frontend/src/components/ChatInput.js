@@ -16,7 +16,7 @@ const ChatInput = ({
       className="chat-input"
       style={{ resize: "none" }}
     />
-    <button type="submit" disabled={loading}>
+    <button className="submit-button" type="submit" disabled={loading}>
       Send
     </button>
   </form>
