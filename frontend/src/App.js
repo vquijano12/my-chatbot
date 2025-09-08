@@ -25,12 +25,14 @@ const App = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    setMessages((prev) => [...prev, { role: "user", content: input }]);
+    const cleanedInput = input.replace(/\s+/g, " ").trim();
+
+    setMessages((prev) => [...prev, { role: "user", content: cleanedInput }]);
     setInput("");
     setLoading(true);
 
     try {
-      const result = await generateResponse({ input });
+      const result = await generateResponse({ input: cleanedInput });
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: result.response },

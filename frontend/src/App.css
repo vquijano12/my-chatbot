@@ -96,6 +96,13 @@ div > div {
   margin-right: 40px;
 }
 
+.user-message,
+.assistant-message {
+  word-break: break-word;
+  max-width: 70%;
+  white-space: pre-wrap;
+}
+
 .loading-indicator {
   display: flex;
   align-items: center;
