@@ -7,6 +7,7 @@ const App = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const textareaRef = useRef(null);
+  const chatEndRef = useRef(null);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -20,6 +21,12 @@ const App = () => {
   const handleInputChange = (e) => {
     setInput(e.target.value);
   };
+
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +58,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="app-container">
       <h1>Q&AI Helper</h1>
       <form onSubmit={handleSubmit}>
         <textarea
@@ -87,6 +94,7 @@ const App = () => {
               </div>
             </div>
           ))}
+          <div ref={chatEndRef} />
         </div>
       )}
     </div>

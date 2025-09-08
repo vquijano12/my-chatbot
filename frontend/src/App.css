@@ -43,7 +43,7 @@ button:hover {
   background: #0056b3;
 }
 
-div {
+.app-container {
   max-width: 600px;
   margin: 0 auto;
 }
