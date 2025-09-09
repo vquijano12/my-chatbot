@@ -74,11 +74,26 @@ const App = () => {
         { role: "assistant", content: result.response },
       ]);
     } catch (error) {
+      let errorMessage =
+        "An unexpected error has occurred while generating the response.";
+      if (error.response) {
+        // Server responded with a status code outside 2xx
+        errorMessage = `Server error (${error.response.status}): ${
+          error.response.data?.error || "Please try again later."
+        }`;
+      } else if (error.request) {
+        // Request was made but no response received (server down or unreachable)
+        errorMessage =
+          "Unable to connect to the server. Please make sure the server is running.";
+      } else if (error.message) {
+        // Something else happened
+        errorMessage = `Error: ${error.message}`;
+      }
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: "An error occurred while generating the response.",
+          content: errorMessage,
         },
       ]);
     } finally {
