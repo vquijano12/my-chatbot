@@ -1,6 +1,7 @@
 import React from "react";
 import MessageBubble from "./MessageBubble";
 import ScrollToBottom from "./ScrollToBottom";
+import "../styles/ChatContainer.css";
 
 const ChatContainer = ({
   messages,
