@@ -16,6 +16,7 @@ const ChatInput = ({
       rows={1}
       className="chat-input"
       style={{ resize: "none" }}
+      placeholder="Type your message here..."
     />
     <button className="submit-button" type="submit" disabled={loading}>
       Send
