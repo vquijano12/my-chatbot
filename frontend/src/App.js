@@ -112,7 +112,7 @@ const App = () => {
           textareaRef={textareaRef}
           loading={loading}
         />
-        {loading && <LoadingIndicator />}
+        <LoadingIndicator loading={loading} />
         {messages.length > 0 && (
           <div style={{ position: "relative" }}>
             <ChatContainer
