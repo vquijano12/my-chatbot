@@ -1,12 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { generateResponse } from "./api";
 import "./App.css";
+import ChatInput from "./components/ChatInput";
+import ChatContainer from "./components/ChatContainer";
+import LoadingIndicator from "./components/LoadingIndicator";
 
 const App = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const textareaRef = useRef(null);
+  const chatEndRef = useRef(null);
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -19,6 +25,36 @@ const App = () => {
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
+  };
+
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    const chatContainer = chatContainerRef.current;
+    if (!chatContainer) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = chatContainer;
+      setShowScrollBtn(scrollTop + clientHeight < scrollHeight - 20);
+    };
+
+    chatContainer.addEventListener("scroll", handleScroll);
+
+    // Run once in case the chat is already scrollable
+    handleScroll();
+
+    // Clean up
+    return () => chatContainer.removeEventListener("scroll", handleScroll);
+  }, [messages]); // <-- add messages as a dependency
+
+  const scrollToBottom = () => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -51,42 +87,25 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="app-container">
       <h1>Q&AI Helper</h1>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          ref={textareaRef}
-          value={input}
-          onChange={handleInputChange}
-          rows={1}
-          className="chat-input"
-          style={{ resize: "none" }}
-        />
-        <button type="submit" disabled={loading}>
-          Send
-        </button>
-      </form>
-      {loading && (
-        <div className="loading-indicator">
-          <span className="spinner"></span> Generating response...
-        </div>
-      )}
+      <ChatInput
+        input={input}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+        textareaRef={textareaRef}
+        loading={loading}
+      />
+      {loading && <LoadingIndicator />}
       {messages.length > 0 && (
-        <div className="chat">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={msg.role === "user" ? "user-row" : "assistant-row"}
-            >
-              <div
-                className={
-                  msg.role === "user" ? "user-message" : "assistant-message"
-                }
-              >
-                <b>{msg.role === "user" ? "You" : "Bot"}:</b> {msg.content}
-              </div>
-            </div>
-          ))}
+        <div style={{ position: "relative" }}>
+          <ChatContainer
+            messages={messages}
+            chatEndRef={chatEndRef}
+            chatContainerRef={chatContainerRef}
+            scrollToBottom={scrollToBottom}
+            showScrollBtn={showScrollBtn}
+          />
         </div>
       )}
     </div>
