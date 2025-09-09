@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/ScrollToBottom.css";
 
 const ScrollToBottom = ({ onClick, visible }) => {
   if (!visible) return null;

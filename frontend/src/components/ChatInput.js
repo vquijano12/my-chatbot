@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/ChatInput.css";
 
 const ChatInput = ({
   input,
