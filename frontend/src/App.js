@@ -104,25 +104,27 @@ const App = () => {
   return (
     <div className="app-container">
       <h1>Q&AI Helper</h1>
-      <ChatInput
-        input={input}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleSubmit}
-        textareaRef={textareaRef}
-        loading={loading}
-      />
-      {loading && <LoadingIndicator />}
-      {messages.length > 0 && (
-        <div style={{ position: "relative" }}>
-          <ChatContainer
-            messages={messages}
-            chatEndRef={chatEndRef}
-            chatContainerRef={chatContainerRef}
-            scrollToBottom={scrollToBottom}
-            showScrollBtn={showScrollBtn}
-          />
-        </div>
-      )}
+      <div className="chat-area-wrapper">
+        <ChatInput
+          input={input}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          textareaRef={textareaRef}
+          loading={loading}
+        />
+        {loading && <LoadingIndicator />}
+        {messages.length > 0 && (
+          <div style={{ position: "relative" }}>
+            <ChatContainer
+              messages={messages}
+              chatEndRef={chatEndRef}
+              chatContainerRef={chatContainerRef}
+              scrollToBottom={scrollToBottom}
+              showScrollBtn={showScrollBtn}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
