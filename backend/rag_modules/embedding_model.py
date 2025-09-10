@@ -18,7 +18,7 @@ def get_embedding_model():
     )
 
 
-def embed_documents(docs, delay=3):  # delay in seconds (e.g., 0.5s = 2 requests/sec)
+def embed_documents(docs, delay=0.75):  # delay in seconds (e.g., 0.5s = 2 requests/sec)
     model = get_embedding_model()
     embeddings = []
     for doc in docs:
