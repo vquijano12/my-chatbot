@@ -18,7 +18,7 @@ def create_documents_table(conn):
         """
         CREATE TABLE IF NOT EXISTS documents (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            content TEXT,
+            content TEXT UNIQUE,
             embedding TEXT
         )
         """
