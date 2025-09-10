@@ -62,3 +62,9 @@ def fetch_relevant_documents(conn, query_embedding, top_n=5, threshold=0.7):
     # Sort by similarity and return top_n
     top_docs = sorted(docs, key=lambda x: x["similarity"], reverse=True)[:top_n]
     return top_docs
+
+
+def document_exists(conn, content):
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM documents WHERE content = ?", (content,))
+    return cursor.fetchone() is not None
