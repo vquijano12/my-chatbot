@@ -10,6 +10,7 @@ from .vector_store import (
     create_documents_table,
     insert_document_with_embedding,
     fetch_relevant_documents,
+    document_exists,
 )
 from .prompt_template import get_prompt_template
 from .chat_model import generate_response
@@ -23,11 +24,12 @@ def ingest(directory, db_path):
     ]
     docs = load_documents(filepaths)
     chunks = split_documents(docs)
-    embeddings = embed_documents(chunks)
     conn = connect_db(db_path)
     create_documents_table(conn)
-    for chunk, embedding in zip(chunks, embeddings):
-        insert_document_with_embedding(conn, chunk.page_content, embedding)
+    for chunk in chunks:
+        if not document_exists(conn, chunk.page_content):
+            embedding = embed_documents([chunk])[0]
+            insert_document_with_embedding(conn, chunk.page_content, embedding)
     conn.close()
     print("Ingestion complete.")
 
