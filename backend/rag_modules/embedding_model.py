@@ -13,7 +13,7 @@ def log_embedding_usage(query):
 def get_embedding_model():
     api_key = get_api_key()
     return GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001", google_api_key=api_key
+        model="models/gemini-embedding-001", google_api_key=api_key
     )
 
 
